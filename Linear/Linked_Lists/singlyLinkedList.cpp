@@ -7,10 +7,7 @@ class SinglyLinkedList{
         struct Node{
             Node * next;
             T data;
-            Node(T data = T(), Node * next = nullptr){
-                this->data = data;
-                this->next = next;
-            }
+            Node(T data = T(), Node * next = nullptr): data(data), next(next){}
         };
         int _size;
         Node * head;
@@ -24,16 +21,16 @@ class SinglyLinkedList{
         ~SinglyLinkedList(){
             clear();
         }
-        int get_size(){
+        int get_size() const {
             return _size;
         }
 
-        bool is_empty(){
+        bool is_empty() const {
             return _size == 0;
         }
 
         void push_back(T data){
-            if(head == nullptr){
+            if(!head){
                 head = new Node(data);
             }else{
                 Node * current = head;
@@ -46,17 +43,14 @@ class SinglyLinkedList{
         }
 
         void push_front(T data){
-            if(head == nullptr){
-                head = new Node(data);
-            }else{
-                Node * newNode = new Node(data);
-                newNode->next = head;
-                head = newNode;
-            }
+            head = new Node(data, head);
             _size++;
         }
 
         void insert(int index, T data){
+            if(index < 0 || index > _size){
+                throw out_of_range("Insert: Inex out of bounds");
+            }
             if(index == 0){
                 push_front(data);
             }else{
@@ -65,11 +59,16 @@ class SinglyLinkedList{
                 for(int i = 0;i < index-1; i++){
                     previous = previous->next;
                 }
+                newNode->next = previous->next;
                 previous->next = newNode;
+                _size++;
             }
         }
 
         void pop_front(){
+            if(!head){
+                throw runtime_error("List is empy");
+            }
             Node * temp = head;
             head = head->next;
             delete temp;
@@ -77,10 +76,16 @@ class SinglyLinkedList{
         }
 
         void pop_back(){
+            if(_size == 0){
+                throw runtime_error("List is empty");
+            }
             remove_at(_size-1);
         }
 
         void remove_at(int index){
+            if(index < 0 || index >= _size){
+                throw out_of_range("Remove: Index out of bounds");
+            }
             if(index == 0){
                 pop_front();
             }else{
@@ -91,21 +96,19 @@ class SinglyLinkedList{
                 Node * removeNode = previous->next;
                 previous->next = removeNode->next;
                 delete removeNode;
+                _size--;
             }
-            _size--;
         }
 
         T & at(int index){
-            int counter = 0;
-            Node * current = head;
-            while(current != nullptr){
-                if(counter == index){
-                    return current->data;
-                }
-                current = current->next;
-                counter++;
+            if(index < 0 || index >= _size){
+                throw out_of_range("Access at: Index out of bounds");
             }
-            throw out_of_range("Index out of bounds");
+            Node * current = head;
+            for(int i = 0; i < index; i++){
+                current = current->next;
+            }
+            return current->data;
         }
 
         int front(){
@@ -123,21 +126,12 @@ class SinglyLinkedList{
         }
 
         T & operator[](const int index){
-            int counter = 0;
-            Node * current = head;
-            while(current != nullptr){
-                if(counter == index){
-                    return current->data;
-                }
-                current = current->next;
-                counter++;
-            }
-            throw out_of_range("Index out of bounds");
+            return at(index);
         }
 
         bool contains(T data){
             Node * current = head;
-            while(current != nullptr){
+            while(current){
                 if(current->data == data){
                     return true;
                 }
@@ -160,12 +154,18 @@ int main(){
     list.push_back(11);
     list.push_back(45);
     list.push_front(56);
-    list.print_list();
+    list.insert(1, 99);  // Insert at index 1
+    list.print_list();   // Output: 56 99 11 45
     cout << endl;
 
-    cout << list.at(0) << endl;
-    cout << endl;
+    cout << "At index 0: " << list.at(0) << endl;     // 56
+    cout << "Front: " << list.front() << endl;        // 56
+    cout << "Back: " << list.back() << endl;          // 45
+
     list.remove_at(0);
-    
-    list.print_list();
+    list.print_list();   // Output: 99 11 45
+    cout << endl;
+
+    list.clear();
+    cout << "Size after clear: " << list.get_size() << endl;  // 0
 }
