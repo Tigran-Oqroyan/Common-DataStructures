@@ -45,7 +45,7 @@ class DoublyLinkedList{
         }
 
         void clear(){
-            if(length){
+            while(!empty()){
                 pop_front();
             }
         }
@@ -79,7 +79,7 @@ class DoublyLinkedList{
         void push_front(T data){
             Node * newNode = new Node(data);
             if(head == nullptr){
-                head = tail = new Node(data);
+                head = tail = newNode;
             }else{
                 head->prev = newNode;
                 newNode->next = head;
@@ -137,7 +137,7 @@ class DoublyLinkedList{
         }
 
         void insert(const int index, T data){
-            if(index < 0 || index > index){
+            if(index < 0 || index > length){
                 throw out_of_range("Index out of range");
             }
             if(index == 0){
@@ -153,8 +153,8 @@ class DoublyLinkedList{
 
                 currentNode->next->prev = newNode;
                 currentNode->next = newNode;
+                length++;
             }
-            length++;
         }
 
         void remove_at(const int index){
@@ -172,8 +172,8 @@ class DoublyLinkedList{
                 prev->next = next;
                 next->prev = prev;
                 delete nodeToDelete;
+                length--;
             }
-            length--;
         }
 
         T & operator[](const int index){
@@ -193,16 +193,27 @@ class DoublyLinkedList{
                 return node->data;
             }
         }
+
+        T get_head() const{
+            if(head == nullptr) throw runtime_error("Empty list");
+            return head;
+        }
+
+        T get_tail() const{
+            if(tail == nullptr) throw runtime_error("Empty list");
+            return tail;
+        }
 };
 
 int main(){
-    cout << "Hi from doubly linked list" << endl;
     DoublyLinkedList<int> list;
     list.push_back(12);
     list.push_back(34);
-    list.insert(2, 123);
-    list.print_forward();
-    list.print_backward();
-    cout << list.at(2) << endl;
-    cout << list.at(2) << endl;
+    list.insert(2, 123); // inserting at index 2 (end of list)
+
+    list.print_forward();   // Expected: 12 34 123
+    list.print_backward();  // Expected: 123 34 12
+
+    cout << list.at(2) << endl; // 123
+    cout << list[1] << endl;    // 34
 }
