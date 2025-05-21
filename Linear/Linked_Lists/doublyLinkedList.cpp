@@ -210,10 +210,15 @@ int main(){
     list.push_back(12);
     list.push_back(34);
     list.insert(2, 123); // inserting at index 2 (end of list)
+    list.push_back(45);
+    list.push_back(99);
 
     list.print_forward();   // Expected: 12 34 123
     list.print_backward();  // Expected: 123 34 12
 
     cout << list.at(2) << endl; // 123
     cout << list[1] << endl;    // 34
+    list.remove_at(3);
+    list.print_forward();
+    
 }
