@@ -2,85 +2,78 @@
 using namespace std;
 
 template <typename T>
-class Stack
-{
-private:
-    struct Node
-    {
-        T data;
-        Node *next;
-        Node(T value = T()) : data(value), next(nullptr) {}
-    };
-    Node *head;
+class Stack{
+    private:
+        struct Node{
+            T data;
+            Node * next;
 
-public:
-    Stack() : head(nullptr) {}
+            Node(T data = T(), Node * next = nullptr): data(data), next(next){};
+        };
+        Node * top;
 
-    bool is_empty()
-    {
-        return head == nullptr;
-    }
-
-    void push(T value)
-    {
-        Node *newNode = new Node(value);
-        if (head == nullptr)
-        {
-            head = newNode;
-            return;
+    public:
+        Stack(){
+            top = nullptr;
         }
-        newNode->next = head;
-        head = newNode;
-    }
 
-    void pop()
-    {
-        if (head == nullptr)
-        {
-            throw runtime_error("Stack is empty");
+        ~Stack(){
+            while(!isEmpty()){
+                pop();
+            }
         }
-        Node *temp = head;
-        head = head->next;
-        delete temp;
-    }
 
-    T top()
-    {
-        if (head == nullptr)
-        {
-            throw runtime_error("Stack is empty");
+        bool isEmpty(){
+            return top == nullptr;
         }
-        return head->data;
-    }
 
-    void print_stack()
-    {
-        Node *current = head;
-        while (current != nullptr)
-        {
-            cout << current->data << " ";
-            current = current->next;
+        void push(int value){
+            Node * newNode = new Node(value);
+            newNode->next = top;
+            top = newNode;
         }
-        cout << endl;
-    }
 
-    ~Stack()
-    {
-        while (!is_empty())
-        {
-            pop();
+        void pop(){
+            if(isEmpty()){
+                cout << "Stack is empty" << endl;
+                return;
+            }
+            Node * temp = top;
+            top = top->next;
+            delete temp;
         }
-    }
+
+        T peek(){
+            if(isEmpty()){
+                cout << "Stack is empty" << endl;
+                return -1;
+            }
+            return top->data;
+        }
+
+        void print(){
+            if(isEmpty()){
+                cout << "Stack is empty" << endl;
+                return;
+            }
+
+            Node * current = top;
+            while(current != nullptr){
+                cout << current->data << endl;
+                current = current->next;
+            }
+            cout << endl;
+        }
 };
 
-int main()
-{
+int main(){
     Stack<int> stack;
-    stack.push(11);
-    stack.push(34);
-    stack.push(56);
-    stack.print_stack();
-
+    stack.push(45);
+    stack.push(22);
     stack.push(67);
-    stack.print_stack();
+    stack.print();
+    cout << stack.peek() << endl;
+    stack.pop();
+    cout << stack.peek() << endl;
+
 }
