@@ -1,3 +1,9 @@
+// isEmpty
+// display
+// push
+// pop
+// peek
+
 #include <iostream>
 using namespace std;
 
@@ -51,7 +57,7 @@ class Stack{
             return top->data;
         }
 
-        void print(){
+        void display(){
             if(isEmpty()){
                 cout << "Stack is empty" << endl;
                 return;
@@ -71,9 +77,8 @@ int main(){
     stack.push(45);
     stack.push(22);
     stack.push(67);
-    stack.print();
-    cout << stack.peek() << endl;
+    stack.display();
+    cout << "Top element is " << stack.peek() << endl;
     stack.pop();
-    cout << stack.peek() << endl;
-
+    cout << "Top element is " << stack.peek() << endl;
 }
